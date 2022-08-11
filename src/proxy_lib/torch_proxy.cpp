@@ -21,7 +21,7 @@
 
 #include <torch/torch.h>
 #include <torch/script.h>
-#include <cuda_runtime.h>
+//#include <cuda_runtime.h> // Sungduk
 
 #include "defines.inc"
 #include "torch_proxy.h"
@@ -51,17 +51,18 @@ void debug_print(const char* format, ...) {}
 bool is_present_flag(int flags, int probe) {
     return (flags & probe) != 0;
 }
-    
-bool is_device_ptr(void* ptr) {
-    cudaPointerAttributes attributes;
-    cudaPointerGetAttributes(&attributes, ptr);
-    return attributes.devicePointer != NULL;
-}
+  
+// Sungduk
+//bool is_device_ptr(void* ptr) {
+//    cudaPointerAttributes attributes;
+//    cudaPointerGetAttributes(&attributes, ptr);
+//    return attributes.devicePointer != NULL;
+//}
 
 template<typename T>
 torch::Tensor tensor_from_array(const std::vector<ftn_shape_type>& f_shape, T* data) {
     torch::Device            device = torch::kCPU;
-    if (is_device_ptr(data)) device = torch::kCUDA;
+    // if (is_device_ptr(data)) device = torch::kCUDA; // Sungduk
 
     std::vector<int64_t> shape(f_shape.size());
     for (size_t i=0; i<f_shape.size(); i++) {
@@ -190,20 +191,21 @@ void torch_tensor_to_array_cpp(void* handle,
     size_bytes *= elem_size;
 
     auto ptr = static_cast<void*>(tensor->data_ptr());
-    if (is_device_ptr(ptr)) {
-        debug_print("Passing GPU tensor %p to Fortran array\n", handle);
-
-        if (device_host_map.find(ptr) == device_host_map.end()) {
-            device_host_map[ptr] = new int8_t[size_bytes];
-        }
-        *host_ptr = device_host_map[ptr];
-        *device_ptr = ptr;
-    } else {
+// Sungduk
+//    if (is_device_ptr(ptr)) {
+//        debug_print("Passing GPU tensor %p to Fortran array\n", handle);
+//
+//        if (device_host_map.find(ptr) == device_host_map.end()) {
+//            device_host_map[ptr] = new int8_t[size_bytes];
+//        }
+//        *host_ptr = device_host_map[ptr];
+//        *device_ptr = ptr;
+//    } else {
         debug_print("Passing CPU %p to Fortran array\n", handle);
 
         *host_ptr = ptr;
         *device_ptr = nullptr;
-    }
+//    }
 }
 
 void torch_tensor_backward(void* handle) {

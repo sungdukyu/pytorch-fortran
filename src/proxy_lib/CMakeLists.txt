@@ -22,7 +22,8 @@
 cmake_minimum_required(VERSION 3.13)
 
 # C++ library should be built with the same compiler as Pytorch
-project(PyTorch-ProxyLib LANGUAGES CXX CUDA)
+#project(PyTorch-ProxyLib LANGUAGES CXX CUDA)
+project(PyTorch-ProxyLib LANGUAGES CXX) # Sungduk
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 find_package(Torch REQUIRED)
