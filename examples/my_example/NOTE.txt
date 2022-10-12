@@ -1,0 +1,12 @@
+(in PSC Bridges2)
+
+[1] load intel compilers
+module load intelmpi/20.4-intel20.4
+
+[2] compile
+ifort aerosol_activation_forward.f90  -I/ocean/projects/atm200007p/shared/pytorch-fortran_intel/install/include/mod_files -L/ocean/projects/atm200007p/shared/pytorch-fortran_intel/install/lib -lpytorch_fort_proxy -lpytorch_proxy -cpp -stand f08 -free -g -check bounds -Wl,-rpath,/ocean/projects/atm200007p/shared/pytorch-fortran_intel/install/lib
+
+[3] execute
+./a.out p05_model05_TWO-LAYER.h5.converted.traced.pt
+
+! The NN model was built and saved using Keras (*.h5) and, later, converted to Pytorch file (*.pt) using https://github.com/sungdukyu/Convert_Keras_to_Pytorch.
