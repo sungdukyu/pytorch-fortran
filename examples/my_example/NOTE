@@ -1,0 +1,12 @@
+# compile using ifort in PSC Bridges-2:
+
+module load intelmpi
+
+# Add compiled pytorch binding lib to LD_LIBRARY_PATH
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/ocean/projects/atm200007p/shared/pytorch-fortran_v0.3_2023/intel/install/lib"
+
+ifort aerosol_activation_forward.f90  -I/ocean/projects/atm200007p/shared/pytorch-fortran_v0.3_2023/intel/install/include/mod_files -L/ocean/projects/atm200007p/shared/pytorch-fortran_v0.3_2023/intel/install/lib -lpytorch_fort_proxy -lpytorch_proxy -cpp -stand f08 -free -g -check bounds
+
+./a.out p05_model05_TWO-LAYER.h5.converted.traced.pt
+
+

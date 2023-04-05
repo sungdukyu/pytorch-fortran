@@ -29,8 +29,17 @@ set -e
 # 1. with GCC, build pytorch C++ wrapper lib that exposes things to Fortran
 # 2. with Intel, build fortran bindings that just bind(c) to built lib from (1)
 
-PYPATH=$(find /opt/conda/lib/ -maxdepth 1 -name 'python?.*' -type d)
+# sungduk: module load intelmpi/20.4-intel20.4
+#          module load intelmpi/2021.3.0-intel2021.3.0
+# sungduk: as i am using the system installed conda, the conda path below needs to be changed
+# sungduk: conda env should have correct packages installed, e.g.,
+#          .conda/envs/pytorch_fortran/lib/python3.10/site-packages/torch/lib/libtorch.so
+#	   .conda/envs/pytorch_fortran/bin/python3.10
+#	   .conda/envs/pytorch_fortran/lib/python3.10/site-packages/pybind11/include	   
+PYPATH=$(find ${CONDA_PREFIX}/lib/ -maxdepth 1 -name 'python?.*' -type d)
 CMAKE_PREFIX_PATH="${PYPATH}/site-packages/torch/share/cmake;${PYPATH}/site-packages/pybind11/share/cmake"
+
+# get old pytorch lib
 
 CONFIG=Release
 OPENACC=0
